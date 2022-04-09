@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Container } from '@mui/material';
 import Button from '@mui/material/Button';
 import { NavLink } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 
 const ContainerStyled = styled(Container)`
@@ -17,6 +18,9 @@ const WordButton = styled.button`
    font-size: 2em;
    cursor: pointer;
    margin: 5px;
+   &:hover {
+    background-color: #e2e2e2;
+  }
 `;
 
 const data = [
@@ -86,18 +90,49 @@ const data = [
     }
 ]
 export const QuestionPage = () => {
-    // console.log(data[0].question);
+
+    // const [data, setData] = useState([]);
+    // const fetchdata = () => {
+    //     fetch('question.json')
+    //         .then(function (res) {
+    //             return res.json();
+    //         })
+    //         .catch((error) => {
+    //             console.error(`Error at fetch ${error}`);
+    //         })
+    //         .then(function (data) {
+    //             setData(data)
+    //         })
+    //         .catch((error) => {
+    //             console.error(`Error at setting data to the state ${error}`);
+    //         });
+    // }
+
+    // useEffect(() => {
+    //     fetchdata();
+    // }, [setData]);
+
 
     const randomQuestion = Math.floor(Math.random() * 3);
     const allWorlds = data.map(data => (data.all_words));
+    const [isChecked, setIsChecked] = useState(false);
+    let choosenWords = [];
 
+    const handleWordCheck = (e) => {
+        choosenWords.push(e.target.innerText);
+        e.target.disabled = true;
+    };
+
+    console.log(data[randomQuestion].question)
     return (
         <>
             <Typography sx={{ mt: -15 }} variant='h3'>{data[randomQuestion].question}</Typography>
             <ContainerStyled >
                 {allWorlds[randomQuestion].map(word => {
                     return (
-                        <WordButton key={word}>{word}</WordButton>
+                        <WordButton
+                            value={isChecked}
+                            onClick={handleWordCheck} key={word}>{word}</WordButton>
                     )
                 })}
             </ContainerStyled>
