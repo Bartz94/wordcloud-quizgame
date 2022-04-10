@@ -4,6 +4,7 @@ import { Container } from '@mui/material';
 import Button from '@mui/material/Button';
 import { NavLink } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import './css.css'
 
 
 const ContainerStyled = styled(Container)`
@@ -23,115 +24,76 @@ const WordButton = styled.button`
   }
 `;
 
-const data = [
-    {
-        question: "select animals",
-        "all_words": [
-            "hole",
-            "sofa",
-            "pear",
-            "tiger",
-            "oatmeal",
-            "square",
-            "nut",
-            "cub",
-            "shirt",
-            "tub",
-            "passenger",
-            "cow"
-        ],
-        good_words: [
-            "tiger",
-            "cow",
-        ]
-    },
-    {
-        question: "select colors",
-        all_words: [
-            "jeans",
-            "existence",
-            "ink",
-            "red",
-            "blue",
-            "yellow",
-            "laugh",
-            "behavior",
-            "expansion",
-            "white",
-            "black",
-            "cakes"
-        ],
-        "good_words": [
-            "red",
-            "blue",
-            "yellow",
-            "white",
-            "black"
-        ]
-    },
-    {
-        question: "select vehicles",
-        all_words: [
-            "belief",
-            "wire",
-            "car",
-            "bus",
-            "star",
-            "river",
-            "hat",
-            "skirt",
-            "train",
-        ],
-        good_words: [
-            "car",
-            "bus",
-            "train"
-        ]
-    }
-]
 export const QuestionPage = () => {
 
-    // const [data, setData] = useState([]);
-    // const fetchdata = () => {
-    //     fetch('question.json')
-    //         .then(function (res) {
-    //             return res.json();
-    //         })
-    //         .catch((error) => {
-    //             console.error(`Error at fetch ${error}`);
-    //         })
-    //         .then(function (data) {
-    //             setData(data)
-    //         })
-    //         .catch((error) => {
-    //             console.error(`Error at setting data to the state ${error}`);
-    //         });
-    // }
+    const [data, setData] = useState([]);
+    const fetchdata = () => {
+        fetch('question.json')
+            .then(function (res) {
+                return res.json();
+            })
+            .catch((error) => {
+                console.error(`Error at fetch ${error}`);
+            })
+            .then(function (data) {
+                setData(data)
+            })
+            .catch((error) => {
+                console.error(`Error at setting data to the state ${error}`);
+            });
+    }
 
-    // useEffect(() => {
-    //     fetchdata();
-    // }, [setData]);
+    useEffect(() => {
+        fetchdata();
+    }, [setData]);
 
 
     const randomQuestion = Math.floor(Math.random() * 3);
+
     const allWorlds = data.map(data => (data.all_words));
+
     const [isChecked, setIsChecked] = useState(false);
-    let choosenWords = [];
+
+    let choosenWords = [];//zrobic stan z tego :)
+
+    const goodWords = data[randomQuestion]?.good_words;
 
     const handleWordCheck = (e) => {
         choosenWords.push(e.target.innerText);
         e.target.disabled = true;
+        console.log(choosenWords.map(word => word))
     };
 
-    console.log(data[randomQuestion].question)
+    const [goodAnswers, setGoodAnswers] = useState([]);
+    const [badAnswers, setBadAnswers] = useState([]);
+
+    const getCorrectAnswers = () => {
+        const userGoodAnswers = goodWords.filter(element => choosenWords.includes(element));
+        setGoodAnswers(userGoodAnswers)
+    }
+    const getBadAnswers = () => {
+        const userGoodAnswers = goodWords.filter(element => choosenWords.includes(element));
+        const userBadAnswers = choosenWords.filter(element => !userGoodAnswers.includes(element));
+        setBadAnswers(userBadAnswers)
+    }
+    console.log(goodAnswers)
+    console.log(badAnswers)
+
+
+    const handleCheckButton = () => {
+        getCorrectAnswers()
+        getBadAnswers()
+    }
+
     return (
         <>
-            <Typography sx={{ mt: -15 }} variant='h3'>{data[randomQuestion].question}</Typography>
+            <Typography sx={{ mt: -15 }} variant='h3'>{data[randomQuestion]?.question}</Typography>
             <ContainerStyled >
-                {allWorlds[randomQuestion].map(word => {
+                {allWorlds[randomQuestion]?.map(word => {
                     return (
                         <WordButton
                             value={isChecked}
+                            className={word}
                             onClick={handleWordCheck} key={word}>{word}</WordButton>
                     )
                 })}
@@ -142,8 +104,10 @@ export const QuestionPage = () => {
                 fontSize: '25px',
                 fontWeight: '400',
             }}
+                onClick={handleCheckButton}
                 variant="outlined"
-                component={NavLink} to="/scoreboard-page">
+            // component={NavLink} to="/scoreboard-page"
+            >
                 check answers
             </Button>
         </>
