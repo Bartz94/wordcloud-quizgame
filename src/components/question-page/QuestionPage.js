@@ -4,8 +4,7 @@ import { Container } from '@mui/material';
 import Button from '@mui/material/Button';
 import { NavLink } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import './css.css'
-
+import './QuestionPage.css'
 
 const ContainerStyled = styled(Container)`
     border: 1px solid black;
@@ -27,6 +26,9 @@ const WordButton = styled.button`
 export const QuestionPage = () => {
 
     const [data, setData] = useState([]);
+    const [randomQuestion, setRandomQuestion] = useState(null);
+
+
     const fetchdata = () => {
         fetch('question.json')
             .then(function (res) {
@@ -44,46 +46,76 @@ export const QuestionPage = () => {
     }
 
     useEffect(() => {
-        fetchdata();
-    }, [setData]);
+        if (!isWordsCheck) {
+            console.log('fetch data')
+            fetchdata();
+            setRandomQuestion(Math.floor(Math.random() * 3))
+        }
+    }, []);
 
 
-    const randomQuestion = Math.floor(Math.random() * 3);
+    // const randomQuestion = Math.floor(Math.random() * 3);
 
     const allWorlds = data.map(data => (data.all_words));
+    // console.log(`to jest allWords ${data}`)
+    console.log(`data`, data)
 
     const [isChecked, setIsChecked] = useState(false);
 
-    let choosenWords = [];//zrobic stan z tego :)
+    const [choosenWords, setChoosenWords] = useState([]);
 
     const goodWords = data[randomQuestion]?.good_words;
 
     const handleWordCheck = (e) => {
-        choosenWords.push(e.target.innerText);
+        setChoosenWords([...choosenWords, e.target.innerText]);
         e.target.disabled = true;
-        console.log(choosenWords.map(word => word))
+        // isUserAnwerCorrect()
     };
 
-    const [goodAnswers, setGoodAnswers] = useState([]);
-    const [badAnswers, setBadAnswers] = useState([]);
+    // const isUserAnwerCorrect = () => {
+    //     const goodAnswers = goodWords.filter(element => choosenWords.includes(element));
+    //     const badAnswers = choosenWords.filter(element => !goodAnswers.includes(element));
+    //     if (goodAnswers.includes(choosenWords)) {
+    //         setIsChecked(true)
+    //     }
+    //     else if (badAnswers.includes(choosenWords)) {
+    //         setIsChecked(false)
+    //     }
+    // }
+
+    const [userGoodAnswers, setUserGoodAnswers] = useState([]);
+    const [userBadAnswers, setBadAnswers] = useState([]);
+    const [itemClassName, setItemClassName] = useState('')
+    const [isWordsCheck, setIsWordsCheck] = useState(false);
 
     const getCorrectAnswers = () => {
-        const userGoodAnswers = goodWords.filter(element => choosenWords.includes(element));
-        setGoodAnswers(userGoodAnswers)
+        const goodAnswers = goodWords.filter(element => choosenWords.includes(element));
+        const badAnswers = choosenWords.filter(element => !goodAnswers.includes(element));
+        setUserGoodAnswers(goodAnswers)
+        setBadAnswers(badAnswers)
     }
-    const getBadAnswers = () => {
-        const userGoodAnswers = goodWords.filter(element => choosenWords.includes(element));
-        const userBadAnswers = choosenWords.filter(element => !userGoodAnswers.includes(element));
-        setBadAnswers(userBadAnswers)
-    }
-    console.log(goodAnswers)
-    console.log(badAnswers)
+
+    console.log(`Dobre odpowiedzi: ${userGoodAnswers}`)
+    console.log(`Złe odpowiedzi: ${userBadAnswers}`)
 
 
     const handleCheckButton = () => {
         getCorrectAnswers()
-        getBadAnswers()
+        // getBadAnswers()
+        console.log(itemClassName)
+        setIsWordsCheck(true)
     }
+
+    const getClassName = (word) => {
+        if (isWordsCheck) {
+            if (userGoodAnswers.includes(word)) {
+                return 'good';
+            }
+            if (userBadAnswers.includes(word)) {
+                return 'bad';
+            }
+        }
+    };
 
     return (
         <>
@@ -93,23 +125,39 @@ export const QuestionPage = () => {
                     return (
                         <WordButton
                             value={isChecked}
-                            className={word}
-                            onClick={handleWordCheck} key={word}>{word}</WordButton>
+                            className={getClassName(word)}
+                            onClick={handleWordCheck}
+                            key={word}
+                        >
+                            {word}
+                        </WordButton>
                     )
                 })}
             </ContainerStyled>
-            <Button sx={{
-                textTransform: 'lowercase',
-                padding: '8px 60px',
-                fontSize: '25px',
-                fontWeight: '400',
-            }}
-                onClick={handleCheckButton}
-                variant="outlined"
-            // component={NavLink} to="/scoreboard-page"
-            >
-                check answers
-            </Button>
+            {isWordsCheck ?
+                <Button sx={{
+                    textTransform: 'lowercase',
+                    padding: '8px 60px',
+                    fontSize: '25px',
+                    fontWeight: '400',
+                }}
+                    variant="outlined"
+                    component={NavLink} to="/scoreboard-page"
+                >
+                    finish
+                </Button>
+                :
+                <Button sx={{
+                    textTransform: 'lowercase',
+                    padding: '8px 60px',
+                    fontSize: '25px',
+                    fontWeight: '400',
+                }}
+                    onClick={handleCheckButton}
+                    variant="outlined"
+                >
+                    check answers
+                </Button>}
         </>
     );
 };
