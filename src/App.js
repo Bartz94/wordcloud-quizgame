@@ -1,6 +1,5 @@
-import './App.css';
 import { Wrapper } from './components/common/Wrapper';
-import { UserContextProvider } from './services/UserContextProvider';
+import { UserContextProvider } from './context/UserContextProvider';
 import { Content } from './content/Content';
 
 function App() {
