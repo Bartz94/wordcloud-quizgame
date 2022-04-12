@@ -1,27 +1,25 @@
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import { Alert } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useMediaQuery } from '@mui/material';
-import { useUserContext } from '../../services/UserContextProvider';
+import { useUserContext } from '../../context/UserContextProvider';
 import { useState } from 'react';
-
-
 
 export const LoginPage = () => {
     const isActive = useMediaQuery("(min-width: 1000px)");
     const { name, setName } = useUserContext();
-    const [errors, setError] = useState(false);
+    const [error, setError] = useState(false);
+    const navigate = useNavigate();
 
-
-    const handleSetName = (event) => {
+    const handleChangeName = (event) => {
         setName(event.target.value);
     };
 
-    const navigate = useNavigate();
-    const handlePlayButton = (event) => {
+    const handlePlayButton = () => {
         if (name) {
+            setError(false);
             navigate(`/question-page`)
         }
         else {
@@ -36,8 +34,8 @@ export const LoginPage = () => {
                 fullWidth
                 label="Enter your nickname here..."
                 margin='normal'
-                onChange={handleSetName}
-                error={errors}
+                onChange={handleChangeName}
+                error={error}
             />
             <Button sx={{
                 textTransform: 'lowercase',
@@ -49,13 +47,13 @@ export const LoginPage = () => {
                 variant="outlined">
                 play
             </Button>
-            {errors ?
+            {error &&
                 <>
                     <Alert sx={{ m: 3 }} variant="outlined" severity="error">
                         Error — please enter your nickname!
                     </Alert>
                 </>
-                : ''
+
             }
         </>
     );
