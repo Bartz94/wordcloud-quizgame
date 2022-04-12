@@ -38,7 +38,6 @@ export const LoginPage = () => {
                 margin='normal'
                 onChange={handleSetName}
                 error={errors}
-                value={''}
             />
             <Button sx={{
                 textTransform: 'lowercase',
