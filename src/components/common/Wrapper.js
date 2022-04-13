@@ -6,7 +6,7 @@ export const Wrapper = (props) => (
         justifyContent: 'space-evenly',
         flexWrap: 'wrap',
         margin: '200px auto',
-        maxWidth: '750px',
+        maxWidth: '800px',
     }}>
         {props.children}
     </div >
