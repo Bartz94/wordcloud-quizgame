@@ -1,18 +1,26 @@
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useUserContext } from '../../context/UserContextProvider';
+import { useEffect } from 'react';
 
 export const Scoreboard = () => {
     const { name, score } = useUserContext();
+    let navigate = useNavigate();
+
+    useEffect(() => {
+        if (!name) {
+            navigate('/')
+        }
+    }, []);
 
     return (
-        <div style={{ textAlign: 'center' }}>
+        <div style={{ textAlign: 'center', marginTop: '3em' }}>
             <Typography variant='h3'>Congratulation, {name}!</Typography>
             <Typography variant='h3'>Your score:</Typography>
-            <Typography variant='h3'>{score}</Typography>
+            <Typography sx={{ color: 'dodgerblue' }} variant='h3'>{score ? score : '0'} points</Typography>
 
-            <Button sx={{
+            {/* <Button sx={{
                 textTransform: 'lowercase',
                 padding: '8px 60px',
                 fontSize: '30px',
@@ -21,7 +29,7 @@ export const Scoreboard = () => {
                 variant="outlined"
                 component={NavLink} to="/">
                 Restart
-            </Button>
+            </Button> */}
         </div>
     );
 };
