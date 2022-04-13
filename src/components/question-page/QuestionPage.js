@@ -1,4 +1,5 @@
 import './QuestionPage.css'
+import { Words } from './Words'
 import Typography from '@mui/material/Typography'
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
@@ -43,6 +44,7 @@ export const QuestionPage = () => {
 
     const [checkingAnswers, setCheckingAnswers] = useState(false);
 
+
     const fetchdata = () => {
         fetch('question.json')
             .then(function (res) {
@@ -57,7 +59,7 @@ export const QuestionPage = () => {
             .catch((error) => {
                 console.error(`Error at setting data to the state ${error}`);
             });
-    }
+    };
 
     useEffect(() => {
         if (!checkingAnswers) {
@@ -65,6 +67,7 @@ export const QuestionPage = () => {
             setRandomQuestion(Math.floor(Math.random() * 3));
         }
     }, []);
+
 
     useEffect(() => {
         if (!name) {
@@ -79,27 +82,7 @@ export const QuestionPage = () => {
         setBadAnswers(badAnswers)
     }
 
-    const getClassName = (word) => {
-        if (checkingAnswers) {
-            if (userGoodAnswers.includes(word)) {
-                return 'word-button good';
-            }
-            else if (userBadAnswers.includes(word)) {
-                return 'word-button bad';
-            }
-            else {
-                return 'word-button';
-            }
-        }
-        else {
-            if (selectedWords.includes(word)) {
-                return 'word-button selected-word'
-            }
-            else {
-                return 'word-button'
-            }
-        }
-    };
+
 
     const getPoints = () => {
         const goodAnswers = questionGoodAnswers.filter(element => selectedWords.includes(element));
@@ -110,39 +93,18 @@ export const QuestionPage = () => {
     };
 
     //Event Handlers
-    const handleWordClick = (word) => {
-        setSelectedWords(items => items.includes(word) ? items.filter(n => n !== word) : [word, ...items])
-    }
 
     const handleCheckButton = () => {
         getCorrectAnswers();
         setCheckingAnswers(true);
         getPoints()
-    }
+    };
 
     return (
         <>
             <Typography sx={{ mt: -15 }} variant='h3'>{data[randomQuestion]?.question}</Typography>
-            <ContainerStyled maxWidth={isMinWidth1000px ? 'lg' : 'xs'}  >
-                {allWords[randomQuestion]?.map(word => {
-                    let randomMarginL = word.length + Math.floor(Math.random() + 5);
-                    let randomMarginT = word.length + Math.floor(Math.random() - 1);
-                    return (
-                        <WordBox
-                            sx={{
-                                marginLeft: randomMarginL,
-                                marginTop: randomMarginT,
-                            }}
-                            key={word}>
-                            <button
-                                className={getClassName(word)}
-                                onClick={() => handleWordClick(word)}
-                                key={word}>
-                                {word}
-                            </button>
-                        </WordBox>
-                    )
-                })}
+            <ContainerStyled maxWidth={isMinWidth1000px ? 'lg' : 'xs'} data='data' >
+                <Words />
             </ContainerStyled>
             {
                 checkingAnswers ?
