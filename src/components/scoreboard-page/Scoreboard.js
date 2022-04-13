@@ -4,12 +4,15 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useUserContext } from '../../context/UserContextProvider';
 import { useEffect } from 'react';
 
+
+
 export const Scoreboard = () => {
-    const { name, score } = useUserContext();
+    const { name, setName, score } = useUserContext();
     let navigate = useNavigate();
 
     useEffect(() => {
         if (!name) {
+            setName('')
             navigate('/')
         }
     }, []);
@@ -20,7 +23,7 @@ export const Scoreboard = () => {
             <Typography variant='h3'>Your score:</Typography>
             <Typography sx={{ color: 'dodgerblue' }} variant='h3'>{score ? score : '0'} points</Typography>
 
-            {/* <Button sx={{
+            <Button sx={{
                 textTransform: 'lowercase',
                 padding: '8px 60px',
                 fontSize: '30px',
@@ -29,7 +32,7 @@ export const Scoreboard = () => {
                 variant="outlined"
                 component={NavLink} to="/">
                 Restart
-            </Button> */}
+            </Button>
         </div>
     );
 };
