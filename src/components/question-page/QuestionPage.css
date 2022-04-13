@@ -1,13 +1,36 @@
+.word-button {
+    border: none;
+    background-color: transparent;
+    font-size: 2em;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.word-button:hover {
+    background-color: #e2e2e2;
+}
+
 .good {
     color: green;
 }
 
 .good:before {
-    content: 'Good';
-    color: green;
+    content: ' Good ';
+    font-size: 0.9em;
+    color: rgba(0, 128, 0, 0.351);
+    max-width: 1px;
+    min-height: 40px;
 }
-
 
 .bad {
     color: red;
+}
+
+.bad:before {
+    content: ' Bad ';
+    color: rgba(255, 0, 0, 0.351);
+}
+
+.selected-word {
+    color: rgba(128, 128, 128, 0.33);
 }
