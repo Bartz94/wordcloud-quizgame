@@ -4,17 +4,15 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useUserContext } from '../../context/UserContextProvider';
 import { useEffect } from 'react';
 
-
-
 export const Scoreboard = () => {
-    const { name, setName, score } = useUserContext();
+    const { name, score, setSelectedWords } = useUserContext();
     let navigate = useNavigate();
 
     useEffect(() => {
         if (!name) {
-            setName('')
             navigate('/')
         }
+        setSelectedWords([])
     }, []);
 
     return (
@@ -28,6 +26,7 @@ export const Scoreboard = () => {
                 padding: '8px 60px',
                 fontSize: '30px',
                 fontWeight: '400',
+                m: 2
             }}
                 variant="outlined"
                 component={NavLink} to="/">
