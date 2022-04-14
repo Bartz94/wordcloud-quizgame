@@ -16,7 +16,7 @@
 
 .good:before {
     content: ' Good ';
-    font-size: 0.9em;
+    font-size: 1em;
     color: rgba(0, 128, 0, 0.351);
     max-width: 1px;
     min-height: 40px;
@@ -29,6 +29,8 @@
 .bad:before {
     content: ' Bad ';
     color: rgba(255, 0, 0, 0.351);
+    max-width: 1px;
+    min-height: 40px;
 }
 
 .selected-word {
